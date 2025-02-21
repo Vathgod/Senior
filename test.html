@@ -3,12 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Number Counter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <p>Hello nak tang os knea smer ng nham bay hx nv</p>
-    <p>Hello nak tang os knea smer ng nham bay hx nv</p>
-    <p>Hello nak tang os knea smer ng nham bay hx nv</p>
-    <p>Smer ng nhma bay hx nv oun</p>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div
+      class="bg-cyan-500 p-8 rounded-lg shadow-lg text-center h-96 flex flex-col justify-center items-center gap-10"
+    >
+      <!-- Counter Value -->
+      <div class="font-bold text-green text-3xl">Counter Number</div>
+      <div id="counterValue" class="text-6xl font-bold text-gray-800 mb-6">
+        0
+      </div>
+
+      <!-- Buttons -->
+      <div class="space-x-4">
+        <button
+          onclick="counter.decrement()"
+          class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition duration-200"
+        >
+          Decrement
+        </button>
+        <button
+          onclick="counter.increment()"
+          class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition duration-200"
+        >
+          Increment
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Counter class using OOP
+      class Counter {
+        constructor() {
+          this.count = 0;
+          this.counterElement = document.getElementById("counterValue");
+        }
+
+        // Method to update the counter display
+        updateCounter() {
+          this.counterElement.textContent = this.count;
+        }
+
+        // Method to increment the counter
+        increment() {
+          this.count++;
+          this.updateCounter();
+        }
+
+        // Method to decrement the counter
+        decrement() {
+          this.count--;
+          this.updateCounter();
+        }
+      }
+
+      // Create an instance of the Counter class
+      const counter = new Counter();
+
+      // Initialize the counter display
+      counter.updateCounter();
+    </script>
   </body>
 </html>

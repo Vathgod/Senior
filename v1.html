@@ -3,9 +3,129 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Color Generator with HEX History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <p>hello from v1</p>
+  <body
+    class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4"
+  >
+    <div
+      class="bg-white p-8 rounded-lg shadow-lg text-center w-96 flex flex-col items-center"
+    >
+      <h1 class="text-2xl font-bold text-gray-800 mb-6">Color Generator</h1>
+
+      <div id="colorDisplay" class="w-48 h-48 rounded-lg shadow-md mb-6"></div>
+
+      <div
+        id="colorCode"
+        class="text-xl font-semibold text-gray-700 mb-6 cursor-pointer"
+        title="Click to copy"
+      >
+        #FFFFFF
+      </div>
+
+      <button
+        id="generateBtn"
+        class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition duration-200 mb-6"
+      >
+        Generate Color
+      </button>
+
+      <!-- History container -->
+      <div id="historyContainer" class="w-full">
+        <h2 class="text-lg font-bold mb-2">Color History</h2>
+        <div id="historyList" class="flex flex-col gap-2"></div>
+      </div>
+    </div>
+
+    <script>
+      class ColorGenerator {
+        constructor() {
+          this.colorDisplay = document.getElementById("colorDisplay");
+          this.colorCode = document.getElementById("colorCode");
+          this.generateBtn = document.getElementById("generateBtn");
+          this.historyList = document.getElementById("historyList");
+
+          this.generateBtn.addEventListener("click", () =>
+            this.generateColor()
+          );
+          this.colorCode.addEventListener("click", () =>
+            this.copyToClipboard()
+          );
+
+          this.init();
+        }
+
+        init() {
+          this.generateColor(); // Set an initial random color on page load
+        }
+
+        generateHexColor() {
+          return `#${Math.floor(Math.random() * 16777215)
+            .toString(16)
+            .padStart(6, "0")
+            .toUpperCase()}`;
+        }
+
+        generateColor() {
+          const newColor = this.generateHexColor();
+          this.applyColor(newColor);
+          this.addToHistory(newColor);
+        }
+
+        applyColor(color) {
+          this.currentColor = color; // Store the current color
+          this.colorDisplay.style.backgroundColor = color;
+          this.colorCode.textContent = color;
+        }
+
+        copyToClipboard() {
+          navigator.clipboard.writeText(this.currentColor).then(() => {
+            const originalText = this.colorCode.textContent;
+            this.colorCode.textContent = "Copied!";
+            setTimeout(() => {
+              this.colorCode.textContent = originalText;
+            }, 1000);
+          });
+        }
+
+        addToHistory(color) {
+          // Create container for history item
+          const historyItem = document.createElement("div");
+          historyItem.className =
+            "flex items-center gap-2 p-2 border rounded cursor-pointer hover:bg-gray-50";
+
+          // Create swatch element
+          const swatch = document.createElement("div");
+          swatch.className = "w-10 h-10 rounded";
+          swatch.style.backgroundColor = color;
+
+          // Create text element to show the HEX code
+          const colorText = document.createElement("span");
+          colorText.className = "text-sm font-mono text-gray-700";
+          colorText.textContent = color;
+
+          historyItem.appendChild(swatch);
+          historyItem.appendChild(colorText);
+
+          // Clicking on a history item re-applies that color.
+          historyItem.addEventListener("click", () => {
+            this.applyColor(color);
+          });
+
+          // Add new history item to the top of the list
+          if (this.historyList.firstChild) {
+            this.historyList.insertBefore(
+              historyItem,
+              this.historyList.firstChild
+            );
+          } else {
+            this.historyList.appendChild(historyItem);
+          }
+        }
+      }
+
+      new ColorGenerator();
+    </script>
   </body>
 </html>
